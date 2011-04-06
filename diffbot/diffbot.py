@@ -93,7 +93,7 @@ class DiffBot():
     api_arguments = {
       "token": self.dev_token,
       "url": url,
-      "tags": '1'
+      # "tags": '1'
     }
     if format != 'json':
       api_arguments['format'] = format
@@ -103,7 +103,6 @@ class DiffBot():
       api_arguments['stats'] = True
       
     query_string = urllib.urlencode(api_arguments)
-    # query_string = '&'.join([k+'='+urllib.quote(str(v)) for (k,v) in api_arguments.items()])
     
     return query_string
     
