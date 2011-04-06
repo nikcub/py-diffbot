@@ -30,7 +30,7 @@ except ImportError:
 class DiffBot():
   
   api_endpoint = "http://www.diffbot.com/api/article"
-  dev_token = "9b86226d9a3306f32bf80fa733692582"
+  dev_token = ""
   request_attempts = 3
 
   def __init__(self, cache_options = None, url_handler = None, dev_token = None):
