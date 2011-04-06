@@ -230,8 +230,6 @@ def main(debug = False):
   from pprint import pprint
   pprint(article)
 
-
-
 if __name__ == "__main__":
   main(os.environ.get('DIFFBOT_DEBUG', False))
 
