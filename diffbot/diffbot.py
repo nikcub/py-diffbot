@@ -159,8 +159,6 @@ def init_logger(level, debug = False):
 def unset_gae():
   # sys.path = [path for path in sys.path if 'site-packages' not in path]
   pass
-  # for x in sys.path:
-    # logging.info(x)
 
 def set_gae():
   a = "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEn" \
