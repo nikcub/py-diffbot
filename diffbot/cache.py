@@ -135,13 +135,6 @@ def handler(cache_options = None):
         return FileCacheHandler(cache_options)
   if GAE:
     return GAEMemcacheHandler(cache_options)
-  if LOCAL_MEMCACHE:
+  if LOCAL_MEMCACHE and cache_options.has_key('memcache_server'):
     return MemcacheHandler(cache_options)
   return FileCacheHandler(cache_options)
-   
-def get(key):
-  pass
-
-def set(key, value):
-  pass
-    
