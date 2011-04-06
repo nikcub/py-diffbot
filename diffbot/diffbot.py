@@ -68,7 +68,7 @@ class DiffBot():
       dev_token = os.environ.get('DIFFBOT_TOKEN', False)
       
     if not dev_token:
-      raise "Please provide a dev token"
+      raise Exception("Please provide a dev token")
       
     self.dev_token = dev_token
     
