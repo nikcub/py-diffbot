@@ -101,10 +101,13 @@ class FileCacheHandler(CacheHandler):
   
   def __init__(self, options):
     if options.has_key('cache_folder'):
-      if os.path.isdir(options['cache_folder']):
+      cf = options['cache_folder']
+      if not cf.startswith('/'):
+        cf = os.path.join(os.path.dirname(__file__), cf)
+      if os.path.isdir(cf):
         self.cache_folder = options['cache_folder']
       else:
-        raise Exception("Not a valid cache folder: %s" % options['cache_folder'])
+        raise Exception("Not a valid cache folder: %s (got: %s)" % (cf, os.path.isdir(cf)))
     else:
       import tempfile
       self.cache_folder = tempfile.gettempdir()
