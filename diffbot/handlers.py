@@ -68,12 +68,9 @@ class UrlfetchHandler(HttpHandler):
           deadline = 20
         )
       except urlfetch.DownloadError, e:
-        logging.exception("DiffBot: (Download Attempt [%d/%d]) DownloadError: Download timed out" 
-          % (attempt, self.request_attempts))
-        if attempt <= self.request_attempts:
-          logging.info("Diffbot: Attempting Download Again")
-          attempt += 1
-          return self.req_urlfetch(url, attempt)
+        logging.info("DiffBot: (Download Attempt [%d/%d]) DownloadError: Download timed out" 
+          % (attempt, self._req_attempts))
+        attempt += 1
       except Exception, e:
         logging.exception("Diffbot: Exception: %s" % e.message)
         logging.exception("Diffbot: Exceeded number of attempts allowed")
