@@ -30,7 +30,12 @@ except ImportError:
     LOCAL_MEMCACHE = True
   except ImportError:
     LOCAL_MEMCACHE = False
-  
+
+
+#---------------------------------------------------------------------------
+#   Handler Classes
+#---------------------------------------------------------------------------
+
 class CacheHandler(object):
   
   options = None
@@ -48,7 +53,8 @@ class CacheHandler(object):
       if cache_store:
         return cache_store
       val = func(*args, **kwargs)
-      self.set(key, val)
+      if val:
+        self.set(key, val)
       return val
     return cache
     
@@ -123,6 +129,12 @@ class FileCacheHandler(CacheHandler):
       logging.exception(e)
       return False
     return True
+
+
+#---------------------------------------------------------------------------
+#   Handler Class
+#---------------------------------------------------------------------------
+
 
 def handler(cache_options = None):
   if cache_options:
