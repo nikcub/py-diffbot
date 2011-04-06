@@ -28,11 +28,42 @@ except ImportError:
     _JSON = False
 
 class DiffBot():
+  """DiffBot API Client
+  
+  Make requests to the DiffBot API. Client library has built-in support for
+  multiple http client libraries, caching with a local file cache and memcache
+  and Google App Engine (defaults to urlfetch and memcache).
+  
+  Initialization options are caching options and developer token, which is 
+  required for all requests.
+  
+  Usage:
+  
+  >>> import diffbot
+  >>> db = diffbot.DiffBot(dev_token="mydevtoken")
+  >>> db.get_article("http://www.newssite.com/newsarticle.html")
+  [parsed article here]
+  
+  :since: v0.1
+  """
   
   api_endpoint = "http://www.diffbot.com/api/article"
   request_attempts = 3
 
-  def __init__(self, cache_options = None, url_handler = None, dev_token = None):
+  def __init__(self, cache_options = None, dev_token = None, attempts = 3):
+    """Initialize the DiffBot API client. Parameters are cache options and the
+    required developer token. 
+    
+    Cache options as a dict with key:
+      handler:              memcache or file
+      cache_dir:            if file cache, use cache folder (default tmp)
+      memcache_server:      memcache server IP address
+      memcache_user:        memcache username
+      
+    dev_token is a required developer token
+    
+    attempts is the number of http request attempts to make on failure
+    """
     if not dev_token:
       dev_token = os.environ.get('DIFFBOT_TOKEN', False)
       
@@ -47,9 +78,18 @@ class DiffBot():
     self._http_handle = self._http_handler_class(cache_options)
 
   def http_handler(self):
+    """Returns the http handler object, which implements handlers.HttpHandler.
+    Implements a single function, fetch, which has a single argument, the url.
+    Handler classes wrap Google App Engine urlfetch library and the various
+    options and exceptions, as well as urllib and urllib2, which will be selected
+    automatically depending on Python version and environment.
+    """
     return self._http_handle
 
   def get_req_args(self, url, format = 'json', comments = False, stats = False):
+    """Build request arguments for query string in API request. Defaults are 
+    to request JSON output format."""
+    # TODO some of these are not implemented. can we order the dict?
     api_arguments = {
       "token": self.dev_token,
       "url": url,
@@ -66,16 +106,24 @@ class DiffBot():
     # query_string = '&'.join([k+'='+urllib.quote(str(v)) for (k,v) in api_arguments.items()])
     
     return query_string
-
     
-  def get_article(self, article_url, format = 'json', comments = False, stats = False, dirty_hack = False):
+  def get_article(self, article_url, format = 'json', comments = False, 
+                  stats = False, dirty_hack = False):
+    """Make an API request to the DiffBot server to retrieve an article.
+    
+    Requires article_url
+    """
     api_args = self.get_req_args(article_url)
     url = self.api_endpoint + '?' + api_args
     
     response = self.http_handler().fetch(url)
     
     if response:
-      de = json.loads(response)
+      try:
+        de = json.loads(response)
+      except Exception, e:
+        logging.exception(e)
+        return False
       if not de.has_key('tags'):
         de['tags'] = []
       if dirty_hack:
@@ -140,19 +188,13 @@ def main(debug = False):
   parser.add_option('-o', '--output', choices=['html', 'raw', 'json', 'pretty'], 
                     dest='oformat', help="Ouput format (html, raw, json, pretty)")
   parser.add_option('-k', dest='key', help="Diffbot developer API key")
-  # Tests
-  # h = http, m = memcache, f = filecache
+
   parser.add_option('-t', '--test', 
               choices=["gae", "nogae", "http", "memcache", "filecache", "h", "m", "f"], 
               help=SUPPRESS_HELP)
   
   (options, args) = parser.parse_args()
   init_logger(options.log_level, debug)
-  
-  # logging.info("Got arguments:")
-  # logging.info(options)
-  # logging.info(args)
-  # logging.info(len(args))
   
   if len(args) != 1:
     parser.print_help()
@@ -189,10 +231,7 @@ def main(debug = False):
 
   from pprint import pprint
   pprint(article)
-  
-  # for (k, v) in article:
-    # if 
-  
+
 
 
 if __name__ == "__main__":
