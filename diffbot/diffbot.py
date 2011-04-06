@@ -30,12 +30,16 @@ except ImportError:
 class DiffBot():
   
   api_endpoint = "http://www.diffbot.com/api/article"
-  dev_token = ""
   request_attempts = 3
 
   def __init__(self, cache_options = None, url_handler = None, dev_token = None):
-    if not dev_token and not self.dev_token:
-      raise "Pleae provide a dev token"
+    if not dev_token:
+      dev_token = os.environ.get('DIFFBOT_TOKEN', False)
+      
+    if not dev_token:
+      raise "Please provide a dev token"
+      
+    self.dev_token = dev_token
     
     from handlers import handler
     
@@ -131,6 +135,8 @@ def main(debug = False):
                     const=logging.INFO, dest='log_level')
   parser.add_option('-q', '--quiet', action='store_const', 
                     const=logging.CRITICAL, dest='log_level')
+  parser.add_option('-c', '--cache', choices=['memcache', 'file', 'm', 'f'], 
+                    dest='cache', help="Cache (memcache or file)")
   parser.add_option('-o', '--output', choices=['html', 'raw', 'json', 'pretty'], 
                     dest='oformat', help="Ouput format (html, raw, json, pretty)")
   parser.add_option('-k', dest='key', help="Diffbot developer API key")
@@ -159,19 +165,27 @@ def main(debug = False):
     print "Error: Please enter a valid url (%s)" % _url
     sys.exit(-1)
 
+  cache_options = {}
+  
   if options.test == 'gae':
     set_gae()
   elif options.test == 'nogae':
     unset_gae()
-  elif options.test == 'http' or options.test == 'h':
-    logging.info("Testing http client")
-    # http_client = httpclient.HttpClient(_url)
   elif options.test == 'memcache' or options.test == 'm':
     logging.info("Testing memcache")
   
-  cache_options = {'handler': 'file'}
-  db = DiffBot(cache_options)
-  article = db.get_article(_url)
+  if options.cache == 'm' or options.cache == 'memcache':
+    cache_options['handler'] = 'memcache'
+  elif options.cache == 'f' or options.cache == 'file':
+    cache_options['handler'] = 'file'
+  # cache_options = {'handler': 'memcache'}
+  
+  try:
+    db = DiffBot(cache_options)
+    article = db.get_article(_url)
+  except Exception, e:
+    print "Error: ", e
+    exit(-1)
 
   from pprint import pprint
   pprint(article)
