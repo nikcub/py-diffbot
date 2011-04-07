@@ -1,1 +1,69 @@
-py-diffbot
+== py-diffbot ==
+
+py-diffbot is a command line terminal client and python library for the [[http://www.diffbot.com/|Diffbot]] article extraction and analysis API.
+
+=== Developer Token ===
+
+To use the client or Python library you will need to include a developer token, which can be obtained by submitting a request at the Diffbot website.
+
+[[http://www.diffbot.com/docs/token]]
+
+=== Getting Source ===
+
+{{{
+$ hg clone http://bitbucket.org/nik/py-diffbot/ diffbot
+}}}
+
+=== Command Line Client ===
+
+{{{
+$ cd diffbot
+$ chmod +x diffbot.py
+$ ./diffbot.py
+}}}
+
+Command line options:
+
+{{{
+$ ./diffbot.py 
+Usage: diffbot.py: [options] [url]
+
+Options:
+  -h, --help            show this help message and exit
+  -d, --debug           
+  -v, --verbose         
+  -q, --quiet           
+  -o OFORMAT, --output=OFORMAT
+                        Ouput format (html, raw, json, pretty)
+  -k KEY                Diffbot developer API key
+
+}}}
+
+=== Library Integration ===
+
+{{{
+$ hg clone http://bitbucket.org/nik/py-diffbot/ diffbot
+}}}
+
+Then link it to your source tree so that it can be imported:
+
+{{{
+$ ln -s diffbot/diffbot /my/project/vendors/diffbot
+}}}
+
+Simple code to get you started:
+
+{{{
+#!python
+
+import diffbot
+
+def main(url):
+	db = diffbot.DiffBot(dev_token = "mydevtoken")
+	article = db.get_article(url)
+}}}
+
+=== Links and Resources ===
+
+* Diffbot Developer Documentation [[http://www.diffbot.com/docs/api/article]]
+
