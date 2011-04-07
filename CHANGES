@@ -1,0 +1,68 @@
+2011-04-07  Nik Cubrilovic  <nikcub@gmail.com>
+
+	* diffbot/diffbot.py:
+	disabled returning tags by default because of server issues
+	[666664830984] [tip]
+
+	* diffbot/handlers.py:
+	fixed bug in 'attempts' routing in urlfetch
+	[6f9af1086249]
+
+	* diffbot/diffbot.py:
+	throw an exception if developer token not found
+	[1e744195e960]
+
+	* diffbot/cache.py:
+	better cache folder checking and path building (along with error
+	handling)
+	[937922ba52e8]
+
+	* diffbot/diffbot.py:
+	support for setting the API key as an environment variable,
+	DIFFBOT_TOKEN, which will be read by the client lib and the command
+	line client
+	[38982d0a7d74]
+
+	* diffbot/diffbot.py:
+	clean up unset_gae function, which is required for testing
+	[f0864bd0b347]
+
+	* diffbot/diffbot.py:
+	added docstrings for class and methods. catch exceptions in JSON
+	parsing
+	[3fed596990ad]
+
+	* diffbot/cache.py:
+	fixed bug where cache will update on request error and store a bad
+	response
+	[63c714f91b39]
+
+	* diffbot/diffbot.py:
+	added command line options to select cache handler (defaults to file
+	and temp directory)
+	[dbb57f7d8fce]
+
+	* diffbot/cache.py:
+	modified default cache handler to file handler and options for local
+	memcache
+	[ce5ec8071600]
+
+	* diffbot/diffbot.py:
+	changed API key settings
+	[72cf75119596]
+
+	* CHANGES, LICENSE, diffbot/__init__.py, diffbot/cache.py,
+	diffbot/diffbot.py, diffbot/handlers.py:
+	initial version
+	[ee19c59bbff6]
+
+2011-04-06  Nik Cubrilovic  <nikcub@gmail.com>
+
+	* diffbot/__init__.py:
+	initial commit
+	[31c06cc6640b]
+
+	* README:
+	none
+	[8f0fce4c5061]
+
