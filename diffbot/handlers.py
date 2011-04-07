@@ -55,7 +55,7 @@ class UrlfetchHandler(HttpHandler):
   """docstring for UrlFetchHttpClient"""
   
   def fetch(self, url):
-    attempt = 0
+    attempt = 1
     result = None
     self._req_headers['Connection'] = 'Close'
     
