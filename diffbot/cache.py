@@ -6,8 +6,8 @@
 
   Caching handlers with support for file, GAE memcache and python memcache
 
-  This source file is subject to the new BSD license that is bundled with this 
-  package in the file LICENSE.txt. The license is also available online at the 
+  This source file is subject to the new BSD license that is bundled with this
+  package in the file LICENSE.txt. The license is also available online at the
   URL: <http://nikcub.appspot.com/bsd-license.txt>
 
   :copyright: Copyright (C) 2011 Nik Cubrilovic and others, see AUTHORS
@@ -31,19 +31,18 @@ except ImportError:
   except ImportError:
     LOCAL_MEMCACHE = False
 
-
 #---------------------------------------------------------------------------
 #   Handler Classes
 #---------------------------------------------------------------------------
 
 class CacheHandler(object):
-  
+
   options = None
-  
+
   def __init__(self, options):
     """docstring for __init__"""
     self.options = options
-    
+
   def wrap(self, func):
     """docstring for fname"""
     def cache(*args, **kwargs):
@@ -57,7 +56,7 @@ class CacheHandler(object):
         self.set(key, val)
       return val
     return cache
-    
+
   def hash(self, key_name):
     return hashlib.sha1(key_name).hexdigest()
 
@@ -65,16 +64,16 @@ class NullHandler(CacheHandler):
   """docstring for NullHandler"""
   def __init__(self, options):
     return None
-    
+
   def wrap(self, func):
     return func
-    
+
 class MemcacheHandler(CacheHandler):
-  
+
   def fname(self):
     """docstring for fname"""
     pass
-    
+
   def fname(self):
     """docstring for fname"""
     pass
@@ -82,13 +81,13 @@ class MemcacheHandler(CacheHandler):
 
 class GAEMemcacheHandler(CacheHandler):
   """docstring for GAEMemcacheHandler"""
-  
+
   ttl = 60 * 60 * 24 * 4
-  
+
   def get(self, key):
     """docstring for get"""
     return memcache.get(key)
-    
+
   def set(self, key, value):
     """docstring for set"""
     return memcache.set(key, value, self.ttl)
@@ -96,9 +95,9 @@ class GAEMemcacheHandler(CacheHandler):
 
 class FileCacheHandler(CacheHandler):
   """docstring for FileCacheHandler"""
-  
+
   cache_folder = None
-  
+
   def __init__(self, options):
     if options.has_key('cache_folder'):
       cf = options['cache_folder']
@@ -111,7 +110,7 @@ class FileCacheHandler(CacheHandler):
     else:
       import tempfile
       self.cache_folder = tempfile.gettempdir()
-  
+
   def get_filepath(self, key):
     return os.path.join(self.cache_folder, "%s.txt" % key)
 
