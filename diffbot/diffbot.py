@@ -220,16 +220,16 @@ def main(debug = False):
   # cache_options = {'handler': 'memcache'}
 
   try:
-    db = DiffBot(cache_options)
+    db = DiffBot(cache_options, dev_token=options.key)
     article = db.get_article(_url)
   except Exception, e:
     print "Error: ", e
     exit(-1)
 
   # Output document based on options
-  if options.output == 'raw':
+  if options.oformat == 'raw':
     print article
-  elif options.output = 'json':
+  elif options.oformat == 'json':
     from pprint import pprint
     pprint(article)
   else:
